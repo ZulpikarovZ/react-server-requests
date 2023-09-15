@@ -1,0 +1,15 @@
+.wrap {
+	background-color: #fff;
+	border-radius: 10px;
+	color: #222;
+	padding: 30px 20px;
+}
+
+.title {
+	text-align: center;
+}
+
+.list {
+	list-style: none;
+	padding: 0;
+}

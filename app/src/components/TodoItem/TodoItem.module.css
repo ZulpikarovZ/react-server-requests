@@ -1,0 +1,7 @@
+.item {
+	outline: 1px solid gray;
+	padding: 10px 5px;
+	margin-bottom: 5px;
+	border-radius: 5px;
+	background-color: #c5e1e5;
+}
