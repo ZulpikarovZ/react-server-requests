@@ -1,0 +1,27 @@
+.modal {
+	background-color: #fff;
+	border-radius: 10px;
+	height: 100px;
+	width: 400px;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+}
+
+.input {
+	height: 35px;
+	width: 250px;
+	border-radius: 5px;
+	padding: 0 10px;
+	/* margin-right: 20px; */
+}
+
+.btn {
+	outline: 1px solid #8de6f8;
+	border-color: #fff;
+	border-radius: 3px;
+	color: #9ae4f7;
+	background-color: #fff;
+	padding: 8px;
+	cursor: pointer;
+}

@@ -1,0 +1,24 @@
+.newTask {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.inputTask {
+	height: 35px;
+	width: 400px;
+	outline: 1px solid #9ae4f7;
+	border-radius: 5px;
+	padding: 0 10px;
+}
+
+.btnTask {
+	outline: 1px solid #8de6f8;
+	border-color: #fff;
+	border-radius: 3px;
+	color: #9ae4f7;
+	background-color: #fff;
+	padding: 8px;
+	cursor: pointer;
+}

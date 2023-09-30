@@ -1,7 +1,25 @@
 .item {
-	outline: 1px solid gray;
+	border-bottom: 1px solid gray;
 	padding: 10px 5px;
 	margin-bottom: 5px;
-	border-radius: 5px;
-	background-color: #c5e1e5;
+	display: flex;
+	box-sizing: border-box;
+}
+
+.item div {
+	width: 10%;
+}
+
+.item div:nth-child(2) {
+	width: 70%;
+}
+
+.item div:nth-child(3),
+.item div:nth-child(4) {
+	text-align: center;
+}
+
+img {
+	cursor: pointer;
+	width: 20px;
 }

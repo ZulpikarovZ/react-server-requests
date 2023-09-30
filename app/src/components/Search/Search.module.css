@@ -1,0 +1,12 @@
+.input {
+	border-radius: 3px;
+	border: 0px;
+	outline: 1px solid #9ae4f7;
+	position: absolute;
+	right: 20px;
+	height: 20px;
+	width: 165px;
+	padding: 0 10px;
+	box-sizing: border-box;
+	color: #333;
+}
