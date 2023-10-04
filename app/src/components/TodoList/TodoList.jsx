@@ -1,5 +1,4 @@
 import styles from './TodoList.module.css';
-import { useState } from 'react';
 import { TodoItem } from '../TodoItem/TodoItem';
 import { Modal } from '../Modal/Modal';
 import { AddTodo } from '../AddTodo/AddTodo';
@@ -16,29 +15,15 @@ import {
 import { useSortList } from '../../hooks/use-sort-list';
 
 export const TodoList = () => {
-	const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
-	const [isShowModal, setIsShowModal] = useState(false);
-	const [isSorted, setIsSorted] = useState(false);
+	const { todos, setTodos, refreshTodosList } = useRequestGetTodos();
 
-	const refreshTodosList = () => setRefreshTodosFlag(!refreshTodosFlag);
+	const { requestAddTodo, inputValue, setInputValue } = useRequestAddTodo();
 
-	const { todos, setTodos } = useRequestGetTodos(setIsSorted, refreshTodosFlag);
+	const { requestUpdateTodo, isShowModal, setIsShowModal } = useRequestUpdateTodo();
 
-	const { requestAddTodo, inputValue, setInputValue } =
-		useRequestAddTodo(refreshTodosList);
+	const { requestDeliteTodo, todoId, setTodoId } = useRequestDeleteTodo();
 
-	const { requestUpdateTodo } = useRequestUpdateTodo(setIsShowModal, refreshTodosList);
-
-	const { requestDeliteTodo, todoId, setTodoId } =
-		useRequestDeleteTodo(refreshTodosList);
-
-	const { sortHandler } = useSortList(
-		setTodos,
-		todos,
-		refreshTodosList,
-		isSorted,
-		setIsSorted,
-	);
+	const { sortHandler, isSorted } = useSortList(setTodos, todos, refreshTodosList);
 
 	const { filteredTodos, searchValue, setSearchValue } = useSearchTodos(todos);
 
@@ -70,17 +55,29 @@ export const TodoList = () => {
 						<div>Edit</div>
 						<div>Del</div>
 					</li>
-					{filteredTodos.length ? (
+					{Object.entries(filteredTodos).length ? (
 						<ul className={styles.list}>
-							{filteredTodos.map((todo) => (
-								<TodoItem
-									key={todo.id}
-									todo={todo}
-									requestDeliteTodo={requestDeliteTodo}
-									setIsShowModal={setIsShowModal}
-									setTodoId={setTodoId}
-								/>
-							))}
+							{Array.isArray(filteredTodos)
+								? filteredTodos.map(([id, todo]) => (
+										<TodoItem
+											key={id}
+											id={id}
+											todo={todo}
+											requestDeliteTodo={requestDeliteTodo}
+											setIsShowModal={setIsShowModal}
+											setTodoId={setTodoId}
+										/>
+								  ))
+								: Object.entries(filteredTodos).map(([id, todo]) => (
+										<TodoItem
+											key={id}
+											id={id}
+											todo={todo}
+											requestDeliteTodo={requestDeliteTodo}
+											setIsShowModal={setIsShowModal}
+											setTodoId={setTodoId}
+										/>
+								  ))}
 						</ul>
 					) : (
 						<p className={styles.text}>No Todos!</p>

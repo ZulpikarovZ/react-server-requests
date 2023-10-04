@@ -1,9 +1,13 @@
-export const useSortList = (setTodos, todos, refreshTodosList, isSorted, setIsSorted) => {
+import { useState } from 'react';
+
+export const useSortList = (setTodos, todos, refreshTodosList) => {
+	const [isSorted, setIsSorted] = useState(false);
+
 	const sortHandler = () => {
 		if (!isSorted) {
 			setTodos(
-				todos.sort((a, b) =>
-					a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1,
+				Object.entries(todos).sort((a, b) =>
+					a[1].title.toLowerCase() > b[1].title.toLowerCase() ? 1 : -1,
 				),
 			);
 			setIsSorted(true);
@@ -13,5 +17,5 @@ export const useSortList = (setTodos, todos, refreshTodosList, isSorted, setIsSo
 		}
 	};
 
-	return { sortHandler, setIsSorted, isSorted };
+	return { sortHandler, isSorted };
 };

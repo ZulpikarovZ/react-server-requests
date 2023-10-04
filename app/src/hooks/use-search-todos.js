@@ -8,14 +8,18 @@ export const useSearchTodos = (todos) => {
 		if (!searchText) {
 			return todoList;
 		}
-		return todoList.filter((todo) =>
-			todo.title.toLowerCase().includes(searchText.toLowerCase()),
-		);
+		return Array.isArray(todoList)
+			? todoList.filter((todo) =>
+					todo[1].title.toLowerCase().includes(searchText.toLowerCase()),
+			  )
+			: Object.entries(todoList).filter((todo) =>
+					todo[1].title.toLowerCase().includes(searchText.toLowerCase()),
+			  );
 	};
 
-	const debouncedSearchValue = useDebounce(searchValue, 300);
+	const debounceValue = useDebounce(searchValue, 300);
 
-	const filteredTodos = filterTodos(debouncedSearchValue, todos);
+	const filteredTodos = filterTodos(debounceValue, todos);
 
 	return { filteredTodos, searchValue, setSearchValue };
 };

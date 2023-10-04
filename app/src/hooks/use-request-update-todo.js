@@ -1,21 +1,22 @@
-export const useRequestUpdateTodo = (setIsShowModal, refreshTodosList) => {
+import { useState } from 'react';
+import { ref, set } from 'firebase/database';
+import { db } from '../firebase';
+
+export const useRequestUpdateTodo = () => {
+	const [isShowModal, setIsShowModal] = useState(false);
+
 	const requestUpdateTodo = (todoId, todoTitle) => {
 		setIsShowModal(false);
 
-		fetch(`http://localhost:3004/todos/${todoId}`, {
-			method: 'PUT',
-			headers: { 'Content-type': 'application/json;charset=utf-8' },
-			body: JSON.stringify({
-				title: todoTitle.trim(),
-			}),
-		})
-			.then((rawResponse) => rawResponse.json())
-			.then(
-				(response) => console.log('TODO is updated! Server response: ', response),
-				refreshTodosList(),
-			)
-			.finally();
+		const todoItemDbRef = ref(db, `todos/${todoId}`);
+
+		set(todoItemDbRef, {
+			title: todoTitle.trim(),
+			id: todoId,
+		}).then((response) =>
+			console.log('TODO is updated! Server response: ', response),
+		);
 	};
 
-	return { requestUpdateTodo };
+	return { requestUpdateTodo, isShowModal, setIsShowModal };
 };

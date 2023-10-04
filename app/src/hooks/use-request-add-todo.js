@@ -1,26 +1,24 @@
 import { useState } from 'react';
+import { ref, push } from 'firebase/database';
+import { db } from '../firebase';
 
-export const useRequestAddTodo = (refreshTodosList) => {
+export const useRequestAddTodo = () => {
 	const [inputValue, setInputValue] = useState('');
 
 	const requestAddTodo = (e) => {
+		const todosDbRef = ref(db, 'todos');
 		e.preventDefault();
+
 		if (inputValue.trim()) {
-			fetch('http://localhost:3004/todos', {
-				method: 'POST',
-				headers: { 'Content-type': 'application/json;charset=utf-8' },
-				body: JSON.stringify({
-					title: inputValue.trim(),
-				}),
+			push(todosDbRef, {
+				title: inputValue.trim(),
+				id: String(Math.random()).slice(2, 6),
 			})
-				.then((rawResponse) => rawResponse.json())
-				.then(
-					(response) =>
-						console.log(
-							'new TODO added successfully! Server response: ',
-							response,
-						),
-					refreshTodosList(),
+				.then((response) =>
+					console.log(
+						'new TODO added successfully! Server response: ',
+						response,
+					),
 				)
 				.finally(setInputValue(''));
 		} else {
