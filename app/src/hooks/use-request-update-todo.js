@@ -1,4 +1,8 @@
-export const useRequestUpdateTodo = (setIsShowModal, refreshTodosList) => {
+import { useState } from 'react';
+
+export const useRequestUpdateTodo = (setIsShowModal, setTodos) => {
+	const [error, setError] = useState('');
+
 	const requestUpdateTodo = (todoId, todoTitle) => {
 		setIsShowModal(false);
 
@@ -10,10 +14,19 @@ export const useRequestUpdateTodo = (setIsShowModal, refreshTodosList) => {
 			}),
 		})
 			.then((rawResponse) => rawResponse.json())
-			.then(
-				(response) => console.log('TODO is updated! Server response: ', response),
-				refreshTodosList(),
-			)
+			.then((response) => {
+				setTodos((prev) =>
+					[...prev].map((el) => {
+						if (el.id === todoId) el.title = response.title.trim();
+						return el;
+					}),
+				);
+				console.log('TODO is updated! Server response: ', response);
+			})
+			.catch((err) => {
+				setError(err);
+				console.log('Error updating todo: ', error);
+			})
 			.finally();
 	};
 

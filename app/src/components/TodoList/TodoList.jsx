@@ -16,44 +16,38 @@ import {
 import { useSortList } from '../../hooks/use-sort-list';
 
 export const TodoList = () => {
-	const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
 	const [isShowModal, setIsShowModal] = useState(false);
 	const [isSorted, setIsSorted] = useState(false);
 
-	const refreshTodosList = () => setRefreshTodosFlag(!refreshTodosFlag);
+	const { todos, setTodos, isLoading } = useRequestGetTodos(setIsSorted);
 
-	const { todos, setTodos } = useRequestGetTodos(setIsSorted, refreshTodosFlag);
+	const { requestAddTodo, inputValue, setInputValue, isAddTodoLoading, addTodoError } =
+		useRequestAddTodo(setTodos);
 
-	const { requestAddTodo, inputValue, setInputValue } =
-		useRequestAddTodo(refreshTodosList);
+	const { requestUpdateTodo } = useRequestUpdateTodo(setIsShowModal, setTodos);
 
-	const { requestUpdateTodo } = useRequestUpdateTodo(setIsShowModal, refreshTodosList);
+	const { requestDeliteTodo, todoId, setTodoId } = useRequestDeleteTodo(setTodos);
 
-	const { requestDeliteTodo, todoId, setTodoId } =
-		useRequestDeleteTodo(refreshTodosList);
-
-	const { sortHandler } = useSortList(
-		setTodos,
-		todos,
-		refreshTodosList,
-		isSorted,
-		setIsSorted,
-	);
+	const { sortHandler } = useSortList(setTodos, todos, isSorted, setIsSorted);
 
 	const { filteredTodos, searchValue, setSearchValue } = useSearchTodos(todos);
 
 	return (
 		<>
-			{isShowModal ? (
+			{isLoading ? (
+				<div>Загрузка...</div>
+			) : isShowModal ? (
 				<Modal requestUpdateTodo={requestUpdateTodo} todoId={todoId} />
 			) : (
 				<form className={styles.wrap}>
 					<Search searchValue={searchValue} setSearchValue={setSearchValue} />
 					<h1 className={styles.title}>TODO List</h1>
 					<AddTodo
+						disabled={isAddTodoLoading}
 						requestAddTodo={requestAddTodo}
 						inputValue={inputValue}
 						setInputValue={setInputValue}
+						addTodoError={addTodoError}
 					/>
 					<li className={styles.headerList}>
 						<div>#</div>
