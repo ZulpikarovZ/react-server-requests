@@ -1,23 +1,13 @@
 import styles from './TodoItem.module.css';
-import editIco from '../../assets/edit.png';
-import delIco from '../../assets/del.png';
+import { Link } from 'react-router-dom';
 
-export const TodoItem = ({ todo, requestDeliteTodo, setIsShowModal, setTodoId }) => {
-	const editTodo = () => {
-		setIsShowModal(true);
-		setTodoId(todo.id);
-	};
-
+export const TodoItem = ({ todo }) => {
 	return (
 		<>
 			<li className={styles.item}>
 				<div>{todo.id}</div>
-				<div>{todo.title}</div>
-				<div onClick={editTodo}>
-					<img src={editIco} alt="" />
-				</div>
-				<div onClick={() => requestDeliteTodo(todo.id)}>
-					<img src={delIco} alt="" />
+				<div>
+					<Link to={`/task/${todo.id}`}>{todo.title}</Link>
 				</div>
 			</li>
 		</>

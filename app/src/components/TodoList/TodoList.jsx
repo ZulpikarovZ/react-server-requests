@@ -1,43 +1,26 @@
 import styles from './TodoList.module.css';
-import { useState } from 'react';
 import { TodoItem } from '../TodoItem/TodoItem';
-import { Modal } from '../Modal/Modal';
 import { AddTodo } from '../AddTodo/AddTodo';
 import { Search } from '../Search/Search';
 import sortIco from '../../assets/sort.png';
 import closeIco from '../../assets/close.png';
-import {
-	useRequestAddTodo,
-	useRequestDeleteTodo,
-	useRequestGetTodos,
-	useRequestUpdateTodo,
-	useSearchTodos,
-} from '../../hooks';
+import { useRequestAddTodo, useRequestGetTodos, useSearchTodos } from '../../hooks';
 import { useSortList } from '../../hooks/use-sort-list';
 
 export const TodoList = () => {
-	const [isShowModal, setIsShowModal] = useState(false);
-	const [isSorted, setIsSorted] = useState(false);
-
-	const { todos, setTodos, isLoading } = useRequestGetTodos(setIsSorted);
+	const { todos, setTodos, isLoading } = useRequestGetTodos();
 
 	const { requestAddTodo, inputValue, setInputValue, isAddTodoLoading, addTodoError } =
 		useRequestAddTodo(setTodos);
 
-	const { requestUpdateTodo } = useRequestUpdateTodo(setIsShowModal, setTodos);
-
-	const { requestDeliteTodo, todoId, setTodoId } = useRequestDeleteTodo(setTodos);
-
-	const { sortHandler } = useSortList(setTodos, todos, isSorted, setIsSorted);
+	const { sortHandler, isSorted } = useSortList(setTodos, todos);
 
 	const { filteredTodos, searchValue, setSearchValue } = useSearchTodos(todos);
 
 	return (
 		<>
 			{isLoading ? (
-				<div>Загрузка...</div>
-			) : isShowModal ? (
-				<Modal requestUpdateTodo={requestUpdateTodo} todoId={todoId} />
+				<div>Loading...</div>
 			) : (
 				<form className={styles.wrap}>
 					<Search searchValue={searchValue} setSearchValue={setSearchValue} />
@@ -61,19 +44,11 @@ export const TodoList = () => {
 								/>
 							</span>
 						</div>
-						<div>Edit</div>
-						<div>Del</div>
 					</li>
 					{filteredTodos.length ? (
 						<ul className={styles.list}>
 							{filteredTodos.map((todo) => (
-								<TodoItem
-									key={todo.id}
-									todo={todo}
-									requestDeliteTodo={requestDeliteTodo}
-									setIsShowModal={setIsShowModal}
-									setTodoId={setTodoId}
-								/>
+								<TodoItem key={todo.id} todo={todo} />
 							))}
 						</ul>
 					) : (

@@ -1,7 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export const useRequestUpdateTodo = (setIsShowModal, setTodos) => {
+export const useRequestUpdateTodo = (setTodos) => {
+	const [isShowModal, setIsShowModal] = useState(false);
 	const [error, setError] = useState('');
+	const navigate = useNavigate();
 
 	const requestUpdateTodo = (todoId, todoTitle) => {
 		setIsShowModal(false);
@@ -27,8 +30,8 @@ export const useRequestUpdateTodo = (setIsShowModal, setTodos) => {
 				setError(err);
 				console.log('Error updating todo: ', error);
 			})
-			.finally();
+			.finally(() => navigate('/'));
 	};
 
-	return { requestUpdateTodo };
+	return { requestUpdateTodo, isShowModal, setIsShowModal };
 };

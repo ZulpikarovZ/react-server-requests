@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useRequestDeleteTodo = (setTodos) => {
-	const [todoId, setTodoId] = useState('');
 	const [error, setError] = useState('');
+	const navigate = useNavigate();
 
 	const requestDeliteTodo = (id) => {
 		fetch(`http://localhost:3004/todos/${id}`, {
@@ -17,8 +18,8 @@ export const useRequestDeleteTodo = (setTodos) => {
 				setError(err);
 				console.log('Error deleting todo: ', error);
 			})
-			.finally();
+			.finally(() => navigate('/'));
 	};
 
-	return { requestDeliteTodo, todoId, setTodoId };
+	return { requestDeliteTodo };
 };

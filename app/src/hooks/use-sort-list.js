@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-export const useSortList = (setTodos, todos, isSorted, setIsSorted) => {
+export const useSortList = (setTodos, todos) => {
 	const [copyTodos, setCopyTodos] = useState([]);
+	const [isSorted, setIsSorted] = useState(false);
 
 	const sortHandler = () => {
 		if (!isSorted) {
@@ -18,5 +19,5 @@ export const useSortList = (setTodos, todos, isSorted, setIsSorted) => {
 		}
 	};
 
-	return { sortHandler, setIsSorted, isSorted };
+	return { sortHandler, isSorted };
 };

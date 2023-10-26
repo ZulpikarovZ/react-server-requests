@@ -1,0 +1,56 @@
+.header {
+	text-align: center;
+}
+
+.wrap {
+	position: relative;
+}
+
+.text {
+	background-color: #fff;
+	border-radius: 10px;
+	color: #222;
+	padding: 30px 20px;
+	width: 560px;
+	box-sizing: border-box;
+	position: relative;
+	margin-bottom: 15px;
+}
+
+.back {
+	position: absolute;
+	top: calc(50% - 20px);
+	left: -60px;
+}
+
+.back img {
+	width: 40px;
+	border-radius: 10px;
+}
+
+.back img:hover {
+	opacity: 0.8;
+}
+
+.back img:active {
+	opacity: 1;
+}
+
+:global a {
+	color: #222;
+	text-decoration: none;
+}
+
+.buttons {
+	display: flex;
+	justify-content: space-around;
+	width: 560px;
+}
+
+.buttons img {
+	width: 30px;
+}
+
+.buttons img:hover {
+	opacity: 0.8;
+}
