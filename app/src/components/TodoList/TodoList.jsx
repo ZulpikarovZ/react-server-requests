@@ -1,36 +1,33 @@
 import styles from './TodoList.module.css';
-import { useState } from 'react';
+import { useContext } from 'react';
 import { TodoItem } from '../TodoItem/TodoItem';
 import { Modal } from '../Modal/Modal';
 import { AddTodo } from '../AddTodo/AddTodo';
 import { Search } from '../Search/Search';
+import { todoContext } from '../../context/AppContext';
 import sortIco from '../../assets/sort.png';
 import closeIco from '../../assets/close.png';
-import {
-	useRequestAddTodo,
-	useRequestDeleteTodo,
-	useRequestGetTodos,
-	useRequestUpdateTodo,
-	useSearchTodos,
-} from '../../hooks';
-import { useSortList } from '../../hooks/use-sort-list';
 
 export const TodoList = () => {
-	const [isShowModal, setIsShowModal] = useState(false);
-	const [isSorted, setIsSorted] = useState(false);
-
-	const { todos, setTodos, isLoading } = useRequestGetTodos(setIsSorted);
-
-	const { requestAddTodo, inputValue, setInputValue, isAddTodoLoading, addTodoError } =
-		useRequestAddTodo(setTodos);
-
-	const { requestUpdateTodo } = useRequestUpdateTodo(setIsShowModal, setTodos);
-
-	const { requestDeliteTodo, todoId, setTodoId } = useRequestDeleteTodo(setTodos);
-
-	const { sortHandler } = useSortList(setTodos, todos, isSorted, setIsSorted);
-
-	const { filteredTodos, searchValue, setSearchValue } = useSearchTodos(todos);
+	const {
+		isShowModal,
+		setIsShowModal,
+		isSorted,
+		isLoading,
+		requestAddTodo,
+		inputValue,
+		setInputValue,
+		isAddTodoLoading,
+		addTodoError,
+		requestUpdateTodo,
+		requestDeliteTodo,
+		todoId,
+		setTodoId,
+		sortHandler,
+		filteredTodos,
+		searchValue,
+		setSearchValue,
+	} = useContext(todoContext);
 
 	return (
 		<>
