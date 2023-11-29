@@ -1,5 +1,4 @@
 import styles from './TodoList.module.css';
-import { useState } from 'react';
 import { TodoItem } from '../TodoItem/TodoItem';
 import { Modal } from '../Modal/Modal';
 import { AddTodo } from '../AddTodo/AddTodo';
@@ -14,48 +13,48 @@ import {
 	useSearchTodos,
 } from '../../hooks';
 import { useSortList } from '../../hooks/use-sort-list';
+import { useSelector } from 'react-redux';
+import {
+	isLoadingTodosSelector,
+	isShowModalSelector,
+	isSortedTodosSelector,
+} from '../../redux/selectors/settingsSelectors';
 
 export const TodoList = () => {
-	const [isShowModal, setIsShowModal] = useState(false);
-	const [isSorted, setIsSorted] = useState(false);
+	const isShowModal = useSelector(isShowModalSelector);
+	const isSortedTodos = useSelector(isSortedTodosSelector);
+	const isLoadingTodos = useSelector(isLoadingTodosSelector);
 
-	const { todos, setTodos, isLoading } = useRequestGetTodos(setIsSorted);
+	useRequestGetTodos();
 
-	const { requestAddTodo, inputValue, setInputValue, isAddTodoLoading, addTodoError } =
-		useRequestAddTodo(setTodos);
+	const { requestAddTodo } = useRequestAddTodo();
 
-	const { requestUpdateTodo } = useRequestUpdateTodo(setIsShowModal, setTodos);
+	const { requestUpdateTodo } = useRequestUpdateTodo();
 
-	const { requestDeliteTodo, todoId, setTodoId } = useRequestDeleteTodo(setTodos);
+	const { requestDeliteTodo } = useRequestDeleteTodo();
 
-	const { sortHandler } = useSortList(setTodos, todos, isSorted, setIsSorted);
+	const { sortHandler } = useSortList();
 
-	const { filteredTodos, searchValue, setSearchValue } = useSearchTodos(todos);
+	const { filteredTodos } = useSearchTodos();
 
 	return (
 		<>
-			{isLoading ? (
+			{isLoadingTodos ? (
 				<div>Загрузка...</div>
 			) : isShowModal ? (
-				<Modal requestUpdateTodo={requestUpdateTodo} todoId={todoId} />
+				<Modal requestUpdateTodo={requestUpdateTodo} />
 			) : (
 				<form className={styles.wrap}>
-					<Search searchValue={searchValue} setSearchValue={setSearchValue} />
+					<Search />
 					<h1 className={styles.title}>TODO List</h1>
-					<AddTodo
-						disabled={isAddTodoLoading}
-						requestAddTodo={requestAddTodo}
-						inputValue={inputValue}
-						setInputValue={setInputValue}
-						addTodoError={addTodoError}
-					/>
+					<AddTodo requestAddTodo={requestAddTodo} />
 					<li className={styles.headerList}>
 						<div>#</div>
 						<div>
 							Task Name
 							<span>
 								<img
-									src={isSorted ? closeIco : sortIco}
+									src={isSortedTodos ? closeIco : sortIco}
 									alt=""
 									onClick={sortHandler}
 								/>
@@ -71,8 +70,6 @@ export const TodoList = () => {
 									key={todo.id}
 									todo={todo}
 									requestDeliteTodo={requestDeliteTodo}
-									setIsShowModal={setIsShowModal}
-									setTodoId={setTodoId}
 								/>
 							))}
 						</ul>

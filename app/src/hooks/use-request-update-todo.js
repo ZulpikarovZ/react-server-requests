@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleModalAction } from '../redux/actions/settingsActions';
+import { editTodoAction } from '../redux/actions/todosActions';
 
-export const useRequestUpdateTodo = (setIsShowModal, setTodos) => {
+export const useRequestUpdateTodo = () => {
 	const [error, setError] = useState('');
+	const dispatch = useDispatch();
 
 	const requestUpdateTodo = (todoId, todoTitle) => {
-		setIsShowModal(false);
+		dispatch(toggleModalAction(false));
 
 		fetch(`http://localhost:3004/todos/${todoId}`, {
 			method: 'PUT',
@@ -15,12 +19,7 @@ export const useRequestUpdateTodo = (setIsShowModal, setTodos) => {
 		})
 			.then((rawResponse) => rawResponse.json())
 			.then((response) => {
-				setTodos((prev) =>
-					[...prev].map((el) => {
-						if (el.id === todoId) el.title = response.title.trim();
-						return el;
-					}),
-				);
+				dispatch(editTodoAction(response));
 				console.log('TODO is updated! Server response: ', response);
 			})
 			.catch((err) => {

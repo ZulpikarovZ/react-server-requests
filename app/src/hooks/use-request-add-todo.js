@@ -1,25 +1,32 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	addTodoInputErrorAction,
+	addTodoInputValueAction,
+	addTodoLoadingAction,
+} from '../redux/actions/settingsActions';
+import { addTodoInputValueSelector } from '../redux/selectors/settingsSelectors';
+import { addTodoAction } from '../redux/actions/todosActions';
 
-export const useRequestAddTodo = (setTodos) => {
-	const [inputValue, setInputValue] = useState('');
-	const [isAddTodoLoading, setIsAddTodoLoading] = useState(false);
+export const useRequestAddTodo = () => {
 	const [error, setError] = useState('');
-	const [addTodoError, setAddTodoError] = useState('');
+	const dispatch = useDispatch();
+	const addTodoInputValue = useSelector(addTodoInputValueSelector);
 
 	const requestAddTodo = (e) => {
 		e.preventDefault();
-		if (inputValue.trim()) {
-			setIsAddTodoLoading(true);
+		if (addTodoInputValue.trim()) {
+			dispatch(addTodoLoadingAction(true));
 			fetch('http://localhost:3004/todos', {
 				method: 'POST',
 				headers: { 'Content-type': 'application/json;charset=utf-8' },
 				body: JSON.stringify({
-					title: inputValue.trim(),
+					title: addTodoInputValue.trim(),
 				}),
 			})
 				.then((rawResponse) => rawResponse.json())
 				.then((response) => {
-					setTodos((prev) => [...prev, response]);
+					dispatch(addTodoAction(response));
 					console.log(
 						'new TODO added successfully! Server response: ',
 						response,
@@ -30,15 +37,15 @@ export const useRequestAddTodo = (setTodos) => {
 					console.log('Error adding todo: ', error);
 				})
 				.finally(() => {
-					setInputValue('');
-					setAddTodoError('');
-					setIsAddTodoLoading(false);
+					dispatch(addTodoInputValueAction(''));
+					dispatch(addTodoInputErrorAction(''));
+					dispatch(addTodoLoadingAction(false));
 				});
 		} else {
-			setAddTodoError('Empty value incorrect!');
-			setInputValue('');
+			dispatch(addTodoInputErrorAction('Empty value incorrect!'));
+			dispatch(addTodoInputValueAction(''));
 		}
 	};
 
-	return { requestAddTodo, inputValue, setInputValue, isAddTodoLoading, addTodoError };
+	return { requestAddTodo };
 };

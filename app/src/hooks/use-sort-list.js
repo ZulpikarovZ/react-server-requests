@@ -1,22 +1,27 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { isSortedTodosAction } from '../redux/actions/settingsActions';
+import { todosSelector } from '../redux/selectors/todosSelectors';
+import { getTodosAction, sortingTodosAction } from '../redux/actions/todosActions';
+import { isSortedTodosSelector } from '../redux/selectors/settingsSelectors';
 
-export const useSortList = (setTodos, todos, isSorted, setIsSorted) => {
+export const useSortList = () => {
 	const [copyTodos, setCopyTodos] = useState([]);
+	const dispatch = useDispatch();
+	const todos = useSelector(todosSelector);
+	const isSortedTodos = useSelector(isSortedTodosSelector);
 
 	const sortHandler = () => {
-		if (!isSorted) {
+		if (!isSortedTodos) {
 			setCopyTodos([...todos]);
-			setTodos(
-				todos.sort((a, b) =>
-					a.title.toLowerCase() > b.title.toLowerCase() ? 1 : -1,
-				),
-			);
-			setIsSorted(true);
+
+			dispatch(sortingTodosAction());
+			dispatch(isSortedTodosAction(true));
 		} else {
-			setTodos([...copyTodos]);
-			setIsSorted(false);
+			dispatch(getTodosAction([...copyTodos]));
+			dispatch(isSortedTodosAction(false));
 		}
 	};
 
-	return { sortHandler, setIsSorted, isSorted };
+	return { sortHandler };
 };

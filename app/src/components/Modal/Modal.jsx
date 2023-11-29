@@ -1,12 +1,15 @@
 import styles from './Modal.module.css';
+import { useSelector } from 'react-redux';
 import { useState } from 'react';
+import {
+	chosenTodoIdSelector,
+	chosenTodoTitleSelector,
+} from '../../redux/selectors/settingsSelectors';
 
-export const Modal = ({ requestUpdateTodo, todoId }) => {
-	const [inputValue, setInputValue] = useState('');
-
-	const inputHandler = (e) => {
-		setInputValue(e.target.value);
-	};
+export const Modal = ({ requestUpdateTodo }) => {
+	const chosenTodoTitle = useSelector(chosenTodoTitleSelector);
+	const chosenTodoId = useSelector(chosenTodoIdSelector);
+	const [inputValue, setInputValue] = useState(chosenTodoTitle);
 
 	return (
 		<div className={styles.modal}>
@@ -14,13 +17,13 @@ export const Modal = ({ requestUpdateTodo, todoId }) => {
 				className={styles.input}
 				type="text"
 				value={inputValue}
-				onChange={inputHandler}
+				onChange={(e) => setInputValue(e.target.value)}
 				placeholder="new value"
 			/>
 			<button
 				className={styles.btn}
 				type="button"
-				onClick={() => requestUpdateTodo(todoId, inputValue)}
+				onClick={() => requestUpdateTodo(chosenTodoId, inputValue)}
 			>
 				Edit
 			</button>

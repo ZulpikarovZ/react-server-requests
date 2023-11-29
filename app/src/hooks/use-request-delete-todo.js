@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { deleteTodoAction } from '../redux/actions/todosActions';
 
-export const useRequestDeleteTodo = (setTodos) => {
-	const [todoId, setTodoId] = useState('');
+export const useRequestDeleteTodo = () => {
 	const [error, setError] = useState('');
+	const dispatch = useDispatch();
 
 	const requestDeliteTodo = (id) => {
 		fetch(`http://localhost:3004/todos/${id}`, {
@@ -10,7 +12,7 @@ export const useRequestDeleteTodo = (setTodos) => {
 		})
 			.then((rawResponse) => rawResponse.json())
 			.then((response) => {
-				setTodos((prev) => [...prev].filter((todo) => todo.id !== id));
+				dispatch(deleteTodoAction(id));
 				console.log('TODO is delited!');
 			})
 			.catch((err) => {
@@ -20,5 +22,5 @@ export const useRequestDeleteTodo = (setTodos) => {
 			.finally();
 	};
 
-	return { requestDeliteTodo, todoId, setTodoId };
+	return { requestDeliteTodo };
 };
